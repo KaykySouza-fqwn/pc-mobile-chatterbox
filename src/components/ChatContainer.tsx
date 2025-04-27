@@ -3,30 +3,63 @@ import { useState } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { Computer, Smartphone } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Message {
   text: string;
   isUser: boolean;
+  uid?: string;
 }
 
 interface ChatContainerProps {
   isMobile?: boolean;
 }
 
+interface WebhookResponse {
+  reply: string;
+  uid: string;
+}
+
 export const ChatContainer = ({ isMobile }: ChatContainerProps) => {
   const [messages, setMessages] = useState<Message[]>([
     { text: "Olá! Como posso ajudar?", isUser: false },
   ]);
+  const { toast } = useToast();
 
-  const handleSendMessage = (message: string) => {
+  const handleSendMessage = async (message: string) => {
+    // Adiciona a mensagem do usuário
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
-    // Simular resposta do bot
-    setTimeout(() => {
+
+    try {
+      const response = await fetch("https://primary-production-458e.up.railway.app/webhook/creation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: message,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao enviar mensagem");
+      }
+
+      const data: WebhookResponse = await response.json();
+      
+      // Adiciona a resposta da IA
       setMessages((prev) => [
         ...prev,
-        { text: "Esta é uma resposta automática de exemplo.", isUser: false },
+        { text: data.reply, isUser: false, uid: data.uid },
       ]);
-    }, 1000);
+    } catch (error) {
+      console.error("Erro:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível processar sua mensagem. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
