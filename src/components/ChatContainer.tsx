@@ -30,7 +30,7 @@ export const ChatContainer = ({ isMobile }: ChatContainerProps) => {
   };
 
   return (
-    <div className="flex flex-col h-screen max-w-2xl mx-auto bg-[#1A1F2C] text-white shadow-xl">
+    <div className="flex flex-col h-screen w-full bg-[#1A1F2C] text-white">
       <div className="flex items-center justify-between p-4 border-b border-gray-800">
         <h1 className="text-xl font-semibold">Chat</h1>
         {isMobile ? (
