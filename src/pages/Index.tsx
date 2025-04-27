@@ -1,10 +1,17 @@
+
 import { ChatContainer } from "@/components/ChatContainer";
+import { useIsMobile } from "@/hooks/use-mobile";
+
 const Index = () => {
-  return <div className="flex flex-col md:flex-row w-full min-h-screen bg-black">
-      <div className="w-full md:w-1/2 p-4">
-        <ChatContainer />
+  const isMobile = useIsMobile();
+
+  return (
+    <div className="flex w-full min-h-screen bg-black">
+      <div className="w-full p-4">
+        <ChatContainer isMobile={isMobile} />
       </div>
-      
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
