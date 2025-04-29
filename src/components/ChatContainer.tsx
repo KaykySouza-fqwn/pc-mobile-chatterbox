@@ -16,6 +16,7 @@ interface ChatContainerProps {
   title?: string;
   webhookUrl: string;
   initialMessage?: string;
+  onMessageResponse?: (uid: string) => void;
 }
 
 interface WebhookResponse {
@@ -27,7 +28,8 @@ export const ChatContainer = ({
   isMobile, 
   title = "Chat",
   webhookUrl,
-  initialMessage = "Olá! Como posso ajudar?"
+  initialMessage = "Olá! Como posso ajudar?",
+  onMessageResponse
 }: ChatContainerProps) => {
   const [messages, setMessages] = useState<Message[]>([
     { text: initialMessage, isUser: false },
@@ -60,6 +62,11 @@ export const ChatContainer = ({
         ...prev,
         { text: data.reply, isUser: false, uid: data.uid },
       ]);
+
+      // Notify parent about the UID if callback exists
+      if (onMessageResponse && data.uid) {
+        onMessageResponse(data.uid);
+      }
     } catch (error) {
       console.error("Erro:", error);
       toast({
