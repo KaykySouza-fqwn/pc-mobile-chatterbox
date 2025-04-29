@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
-import { Computer, Smartphone } from "lucide-react";
+import { Computer, Smartphone, BookOpen, Sword, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Message {
@@ -11,10 +11,8 @@ interface Message {
   uid?: string;
 }
 
-interface ChatContainerProps {
+interface GameChatProps {
   isMobile?: boolean;
-  title?: string;
-  webhookUrl: string;
   initialMessage?: string;
 }
 
@@ -23,12 +21,10 @@ interface WebhookResponse {
   uid: string;
 }
 
-export const ChatContainer = ({ 
+export const GameChat = ({ 
   isMobile, 
-  title = "Chat",
-  webhookUrl,
-  initialMessage = "Olá! Como posso ajudar?"
-}: ChatContainerProps) => {
+  initialMessage = "Bem-vindo à sua aventura! O que você deseja fazer?"
+}: GameChatProps) => {
   const [messages, setMessages] = useState<Message[]>([
     { text: initialMessage, isUser: false },
   ]);
@@ -39,7 +35,7 @@ export const ChatContainer = ({
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
 
     try {
-      const response = await fetch(webhookUrl, {
+      const response = await fetch("https://primary-production-458e.up.railway.app/webhook/chat/message", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,25 +69,37 @@ export const ChatContainer = ({
   return (
     <div className="flex flex-col h-screen w-full bg-[#1A1F2C] text-white">
       <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-[#2A2F3C]">
-        <h1 className="text-xl font-semibold">{title}</h1>
-        {isMobile ? (
-          <Smartphone className="w-6 h-6 text-gray-400" />
-        ) : (
-          <Computer className="w-6 h-6 text-gray-400" />
-        )}
+        <div className="flex items-center gap-3">
+          <BookOpen className="w-6 h-6 text-[#9b87f5]" />
+          <h1 className="text-xl font-semibold">Narração do Jogo</h1>
+        </div>
+        <div className="flex gap-2">
+          <Shield className="w-5 h-5 text-[#9b87f5]" />
+          <Sword className="w-5 h-5 text-[#9b87f5]" />
+          {isMobile ? (
+            <Smartphone className="w-5 h-5 text-gray-400" />
+          ) : (
+            <Computer className="w-5 h-5 text-gray-400" />
+          )}
+        </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#1A1F2C] bg-opacity-90 bg-[url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')] bg-cover bg-blend-overlay">
         {messages.map((msg, index) => (
           <ChatMessage
             key={index}
             message={msg.text}
             isUser={msg.isUser}
+            gameStyle={true}
           />
         ))}
       </div>
       
-      <ChatInput onSendMessage={handleSendMessage} />
+      <ChatInput 
+        onSendMessage={handleSendMessage} 
+        placeholder="O que você fará a seguir?"
+        buttonVariant="rpg"
+      />
     </div>
   );
 };
