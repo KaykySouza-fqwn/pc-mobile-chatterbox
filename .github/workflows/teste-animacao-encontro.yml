@@ -4,7 +4,6 @@ on:
   push:
     branches: [teste-animacao-encontro]
     paths:
-      - 'teste-animacao/**'
       - '.github/workflows/teste-animacao-encontro.yml'
 
 permissions:
@@ -40,3 +39,11 @@ jobs:
         run: time npm run render
       - name: Conferir o MP4
         run: npm run verify
+      - name: Disponibilizar o MP4 por um dia
+        uses: actions/upload-artifact@v4
+        with:
+          name: encontro-720x1280
+          path: teste-animacao/out/encontro.mp4
+          retention-days: 1
+          compression-level: 0
+          if-no-files-found: error
