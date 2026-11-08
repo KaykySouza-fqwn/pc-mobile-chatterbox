@@ -100,7 +100,7 @@ function Portrait({kind='lustig', x=0, y=0, scale=1}) {
   </g>;
 }
 
-function Document({x=0,y=0,angle=0,label='CONFIDENTIEL',subtitle='PARIS',seal=true}) {
+function Document({x=0,y=0,angle=0,label='CONFIDENCIAL',subtitle='PARIS',seal=true}) {
   return <g transform={`translate(${x} ${y}) rotate(${angle})`}>
     <rect x="10" y="13" width="274" height="370" fill="#151515" opacity=".45"/>
     <rect width="274" height="370" fill={paper} stroke="#8c7355" strokeWidth="3"/>
@@ -126,6 +126,159 @@ function Room() {
   </>;
 }
 
+function NewScene({type, p, frame}) {
+  if (type==='auction') return <>
+    <path d="M0 300L720 465V1060L0 887Z" fill="#5b3830"/>
+    <path d="M0 837l720-68v340H0Z" fill="#38221f"/>
+    <Portrait kind="poisson" x={325} y={475} scale={1.65}/>
+    <g transform={`translate(${500-64*p} ${765-126*p}) rotate(${21-33*p})`}>
+      <path d="M0 0H183V123H0Z" fill={paper} stroke="#ae8758" strokeWidth="4"/>
+      <text x="91" y="76" textAnchor="middle" fontFamily={serif} fontSize="38" fill={ink}>OFERTA</text>
+      <path d="M77 123h29v179H77Z" fill="#815b3f"/>
+    </g>
+  </>;
+  if (type==='river') return <>
+    <path d="M0 300H720V873H0Z" fill="#36474b"/>
+    <circle cx="550" cy="477" r="160" fill="#aaa282"/>
+    {[0,1,2,3,4,5,6,7].map((i)=><path key={i} d={`M${i*101-30} 755v-${75+(i*19)%101}l48-32 49 32v${75+(i*19)%101}Z`} fill={i%2?'#46433b':'#564d42'}/>)}
+    <path d="M0 724L720 810V1060H0Z" fill="#536f70"/>
+    {[0,1,2,3,4,5].map(i=><path key={i} d={`M${-110+frame*4+i*104} ${824+i*27}h${140-i*10}`} stroke="#b3ad90" opacity=".5" strokeWidth="3"/>)}
+    <path d="M0 734L720 813V853L0 773Z" fill="#333d3c"/>
+  </>;
+  if (type==='worker') return <>
+    <path d="M0 284H720V958H0Z" fill="#4f5149"/>
+    <g stroke="#242927" strokeWidth="26"><path d="M-80 300L760 930M-80 950L760 335M-70 610H780"/></g>
+    <g transform={`translate(${360+28*p} ${598-52*p})`} stroke="#252724" strokeWidth="20" strokeLinecap="round">
+      <path d="M0-251V-35M-6 57l-62 90m70-85 69 66M-14 0l-74-18m106 23 77-65"/>
+      <path d="M-25-18h45l20 102h-74Z" fill="#87684e"/>
+      <circle cx="-1" cy="-59" r="27" fill="#b19773"/>
+      <path d="M-32-70H31" stroke="#38342f"/>
+      <path d="M106-77l39-47m-9-8 26 22" stroke={brass} strokeWidth="9"/>
+    </g>
+  </>;
+  if (type==='ledger') return <g transform="translate(98 340) rotate(-8 265 270)">
+    <rect width="528" height="556" fill="#737f6e" stroke="#253d37" strokeWidth="12"/>
+    <rect x="37" y="35" width="455" height="484" fill={paper}/>
+    <text x="264" y="104" textAnchor="middle" fontFamily={serif} fill={ink} fontSize="32">DESPESAS DA TORRE</text>
+    {[0,1,2,3,4,5].map(i=><path key={i} d={`M72 ${160+i*52}h376`} stroke="#877960" opacity=".65"/>)}
+    <path d="M82 417L170 367 243 380 325 298 425 217" fill="none" stroke={rust} strokeWidth="8" pathLength="1" strokeDasharray="1" strokeDashoffset={1-p}/>
+  </g>;
+  if (type==='scheme') return <>
+    <ellipse cx="355" cy="621" rx="350" ry="320" fill="#714c35"/>
+    <path d="M0 810L720 720V1000H0Z" fill="#292323"/>
+    <Portrait x={340} y={485} scale={1.35}/>
+    <g transform={`translate(${103+59*p} 700) rotate(-13)`}><rect width="380" height="163" fill={paper}/><path d="M40 39h285m-285 29h215m-215 29h265" stroke="#695640" strokeWidth="4"/><path d="M283 127l111-70" stroke="#332824" strokeWidth="12"/></g>
+  </>;
+  if (type==='credential') return <g transform={`translate(115 ${425+94*(1-p)}) rotate(${-14+7*p} 242 148)`}>
+    <rect width="480" height="297" rx="7" fill="#d6c4a0" stroke="#876c53" strokeWidth="8"/>
+    <rect x="30" y="30" width="420" height="237" fill="none" stroke="#826c50" strokeWidth="2"/>
+    <circle cx="114" cy="151" r="48" fill="#8c4739"/><path d="M89 151h51m-25-25v50" stroke={paper} strokeWidth="5"/>
+    <text x="185" y="135" fill={ink} fontFamily={serif} fontSize="31">GOVERNO</text>
+    <text x="185" y="175" fill={ink} fontFamily={serif} fontSize="31">FRANCÊS</text>
+    <path d="M185 197h220" stroke="#a5815e" strokeWidth="2"/>
+  </g>;
+  if (type==='mailbox') return <>
+    <path d="M0 380H720V956H0Z" fill="#526168"/>
+    {[0,1,2,3].map(i=><path key={i} d={`M0 ${447+i*126}H720`} stroke="#344750" strokeWidth="8"/>)}
+    <rect x="194" y="455" width="333" height="432" rx="32" fill="#6f3f36" stroke="#332c2b" strokeWidth="8"/>
+    <text x="360" y="570" textAnchor="middle" fill={paper} fontFamily={serif} fontSize="35">CORREIO</text>
+    <rect x="240" y="622" width="240" height="37" rx="5" fill="#251f1d"/>
+    <g transform={`translate(267 ${528+115*p}) rotate(${14*(1-p)}) scale(1 ${1-.85*p})`}><rect width="181" height="96" fill={paper}/><path d="M0 0l90 57 91-57" fill="none" stroke="#857052" strokeWidth="2"/></g>
+  </>;
+  if (type==='facade') return <>
+    <path d="M59 370L359 275 661 370V964H59Z" fill="#8a7763" stroke="#413c38" strokeWidth="7"/>
+    <path d="M0 805L720 804V986H0Z" fill="#353433"/>
+    {[0,1,2,3,4].map(i=><g key={i} transform={`translate(${93+111*i} 425)`}>
+      <path d="M0 268V76a38 38 0 0 1 76 0v192Z" fill={i===2?'#af8657':'#394348'} stroke="#645341" strokeWidth="5"/>
+      <path d="M38 39v229M0 105h76m-76 70h76" stroke="#5f5145" strokeWidth="3"/>
+    </g>)}
+    <path d="M153 740h414v86H153Z" fill="#283035" stroke={brass} strokeWidth="3"/>
+    <text x="360" y="796" textAnchor="middle" fill={paper} fontFamily={serif} fontSize="40">HOTEL</text>
+  </>;
+  if (type==='demolition') return <>
+    <path d="M0 343H720V965H0Z" fill="#534e48"/>
+    <path d="M-80 427L740 834M-80 855L739 424M0 665H720" stroke="#272e2e" strokeWidth="39"/>
+    <g transform={`translate(${310+58*p} 614)`} stroke={brass} strokeLinecap="round">
+      <path d="M0-300V-40q0 65-57 65" fill="none" strokeWidth="13"/>
+      <path d="M-45 14l-154 123m161-123 169 123" fill="none" strokeWidth="5"/>
+      <path d="M-215 123h356v46h-356Z" fill="#9f7250" stroke="#422e25" strokeWidth="5"/>
+    </g>
+    {[0,1,2,3,4,5].map(i=><path key={i} d={`M${355+i*14} ${638-i*13}l${18+12*p} ${-19-i*2}`} stroke="#d39562" strokeWidth="3" opacity={(1-p)*.8}/>)}
+  </>;
+  if (type==='scrap') return <>
+    <path d="M0 356H720V950H0Z" fill="#3b5151"/>
+    <path d="M0 731L720 696V988H0Z" fill="#272b29"/>
+    {[0,1,2,3,4,5,6].map(i=><g key={i} transform={`translate(${-65+i*113} ${778-i%3*48-23*p}) rotate(${-27+i*9})`}>
+      <path d="M0 0h196v41H0Z" fill={i%2?'#725948':'#8b6d50'} stroke="#322e28" strokeWidth="5"/>
+      <path d="M9 13h176" stroke="#b0916b" strokeWidth="4"/>
+    </g>)}
+    <path d="M360 337v160m0 0q-64 0-64 56t64 30" fill="none" stroke={brass} strokeWidth="9"/>
+  </>;
+  if (type==='cash') return <>
+    <path d="M0 515L720 400V962L0 1040Z" fill="#5a3d31"/>
+    <g transform="translate(145 495) rotate(-8 230 175)">
+      <path d="M0 70h440v283H0Z" fill="#30241e" stroke="#9c7453" strokeWidth="7"/>
+      <path d="M0 70L39 0H400l40 70Z" fill="#6d4d37" stroke="#9c7453" strokeWidth="5"/>
+      {[0,1,2,3].map(i=><g key={i} transform={`translate(${42+i%2*189} ${109+Math.floor(i/2)*92-18*(1-p)})`} opacity={Math.min(1,p*3-i*.18)}>
+        <rect width="164" height="72" fill="#8a9674" stroke="#4b604e" strokeWidth="3"/>
+        <ellipse cx="82" cy="36" rx="27" ry="18" fill="none" stroke="#495f49"/>
+        <path d="M70 0h24v72H70Z" fill="#c0aa7f"/>
+      </g>)}
+    </g>
+  </>;
+  if (type==='empty') return <>
+    <path d="M102 315H634V937H102Z" fill="#70564a"/>
+    <path d="M171 392H562V917H171Z" fill="#252e30" stroke="#a1876b" strokeWidth="7"/>
+    <path d={`M174 392L${510-113*p} ${413+11*p}V${840-17*p}L174 914Z`} fill="#594238" stroke="#b09070" strokeWidth="5"/>
+    <path d="M300 840h300l71 118H210Z" fill="#3a3331"/>
+    <path d="M494 733h67v113h-67zm-18 113h102m-74 1v80m46-80v80" stroke="#8c6d54" fill="none" strokeWidth="9"/>
+  </>;
+  if (type==='phone') return <>
+    <path d="M0 693L720 616V1040H0Z" fill="#65493b"/>
+    <ellipse cx="366" cy="651" rx="300" ry="277" fill="url(#halo)"/>
+    <path d="M245 651q89-99 190-10l41 107v90H211v-85Z" fill="#343a3a" stroke="#161e1f" strokeWidth="8"/>
+    <ellipse cx="344" cy="730" rx="81" ry="49" fill="#6e6960" stroke="#252b2a" strokeWidth="7"/>
+    {[0,1,2,3,4,5,6,7].map(i=><circle key={i} cx={344+47*Math.cos(i*Math.PI/4)} cy={730+27*Math.sin(i*Math.PI/4)} r="9" fill="#303534"/>)}
+    <path d="M165 595q118-112 340 2l23 43-47 55-75-34-17-36q-54-35-113-2l-18 44-71 28-41-49Z" fill="#3e4748" stroke="#181f20" strokeWidth="9" transform={`rotate(${4*Math.sin(frame*.4)*(1-p)} 342 625)`}/>
+    <path d={`M${-190+164*p} 799q107-97 211-58l71 44-14 38-97-18-112 94Z`} fill="#ab8368" stroke="#563e35" strokeWidth="4"/>
+  </>;
+  if (type==='desk') return <>
+    <path d="M0 395L720 485V969H0Z" fill="#676251"/>
+    <path d="M0 696H720V1028H0Z" fill="#554034"/>
+    <path d="M289 507h132l45 97H234Z" fill="#a88958" stroke="#54462f" strokeWidth="5"/>
+    <path d="M351 605v117m-77 0h152" fill="none" stroke={brass} strokeWidth="12"/>
+    <g transform={`translate(${192-102*p} ${789+31*p}) rotate(-9)`}><rect width="350" height="117" fill="#8e7657"/><rect x="25" y="20" width="302" height="76" fill={paper}/><text x="176" y="68" textAnchor="middle" fontFamily={serif} fontSize="28" fill={ink}>SEM DENÚNCIA</text></g>
+  </>;
+  if (type==='map') return <>
+    <path d="M0 305H720V960H0Z" fill="#587076"/>
+    <path d="M0 471L154 381 305 427 366 365 601 400 720 502V960H0Z" fill="#9d9271"/>
+    <path d="M33 753L176 599 310 673 442 530 674 597M76 463L236 550 364 462 587 500" fill="none" stroke="#756f56" strokeWidth="4"/>
+    <path d="M571 573Q427 442 185 637" fill="none" stroke="#783c32" strokeWidth="8" pathLength="1" strokeDasharray="1" strokeDashoffset={1-p}/>
+    <circle cx="571" cy="573" r="14" fill={rust}/><circle cx="185" cy="637" r={10+7*p} fill="#683831"/>
+    <text x="545" y="625" fill={ink} fontSize="29" fontFamily={serif}>ÁUSTRIA</text><text x="137" y="697" fill={ink} fontSize="34" fontFamily={serif}>PARIS</text>
+  </>;
+  if (type==='silhouette') return <>
+    <path d="M0 341H720V968H0Z" fill="#667e7b"/>
+    <circle cx="360" cy="518" r="166" fill="#c4ad82"/>
+    <path d="M-40 940h800V804l-120-77-92 44-57-61-81 62-105-99-116 75-89-60-140 85Z" fill="#313c3b"/>
+    <g transform={`translate(${360+20*p} 837) scale(1.02)`} fill="#1d2b2c">
+      <path d="M-265 0Q-100-160-27-490L-20-570H20l7 80Q100-160 265 0H177Q118-170 0-172Q-118-170-177 0Z"/>
+      <path d="M-204-120H204v23h-408Zm74-161h260v18h-260ZM-5-611H5v50H-5Z"/>
+    </g>
+  </>;
+  if (type==='reject') return <>
+    <path d="M0 328H720V959H0Z" fill="#5a3a35"/>
+    <path d="M0 783L720 693V1040H0Z" fill="#302928"/>
+    <g transform={`translate(${164-66*p} 435) rotate(-13 180 220)`}>
+      <rect width="385" height="449" fill={paper} stroke="#8e7354" strokeWidth="5"/>
+      <text x="192" y="72" textAnchor="middle" fill={ink} fontSize="33" fontFamily={serif}>SEGUNDA OFERTA</text>
+      {[0,1,2,3,4].map(i=><path key={i} d={`M58 ${139+i*40}h268`} stroke="#8b7659" strokeWidth="3"/>)}
+      <g transform={`translate(193 285) scale(${1.22-.22*p})`} opacity={p}><rect x="-172" y="-50" width="344" height="100" fill={paper} stroke={rust} strokeWidth="8"/><text y="15" textAnchor="middle" fill="#983d33" fontFamily={sans} fontWeight="bold" fontSize="43">FRACASSOU</text></g>
+    </g>
+  </>;
+  return null;
+}
+
 function Art({type, detail}) {
   const frame=useCurrentFrame();
   const drift=Math.min(frame/36,1);
@@ -137,6 +290,7 @@ function Art({type, detail}) {
     </defs>
     <rect width="720" height="1280" fill="url(#desk)"/>
     <g transform={`translate(${-13*drift} ${-19*drift}) scale(${1+.055*drift})`}>
+      <NewScene type={type} p={arrive} frame={frame}/>
       {type==='diagram' && <>
         <g opacity=".26" stroke={brass}>
           {Array.from({length:16},(_,i)=><path key={i} d={`M45 ${288+i*38}H675 M${56+i*40} 265V890`}/>)}
@@ -151,20 +305,14 @@ function Art({type, detail}) {
           <text y="13" textAnchor="middle" fill="#e4ab93" fontFamily={sans} fontSize="29" fontWeight="bold">{detail}</text>
         </g>}
       </>}
-      {type==='press' && <>
-        <Document x={104} y={374} angle={-13} label="LE JOURNAL" subtitle="TOUR EIFFEL" seal={false}/>
-        <Document x={311} y={430} angle={9} label="ENTRETIEN" subtitle="COÛTS DE MAINTENANCE"/>
-        <circle cx="468" cy="576" r="78" fill="none" stroke={rust} strokeWidth="5" opacity={.9} pathLength="1" strokeDasharray="1" strokeDashoffset={1-arrive}/>
-        <path d="M548 767l67 82" transform={`translate(${-76*arrive} ${-86*arrive})`} stroke="#b88452" strokeWidth="10"/>
-      </>}
       {type==='identity' && <>
         <ellipse cx="354" cy="566" rx="300" ry="340" fill="url(#halo)"/>
         <Portrait x={338} y={473} scale={1.8}/>
-        <Document x={550-102*arrive} y={718-64*arrive} angle={24-14*arrive} label="MINISTÈRE" subtitle="CORRESPONDANCE"/>
+        <Document x={550-102*arrive} y={718-64*arrive} angle={24-14*arrive} label="MINISTÉRIO" subtitle="CORRESPONDÊNCIA"/>
       </>}
       {type==='letters' && <>
-        <Document x={184} y={365} angle={-11} label="INVITATION" subtitle="RÉUNION PRIVÉE"/>
-        <Document x={330} y={415+32*(1-drift)} angle={11} label="CONFIDENTIEL" subtitle="PARIS • 1925"/>
+        <Document x={184} y={365} angle={-11} label="CONVITE" subtitle="REUNIÃO RESERVADA"/>
+        <Document x={330} y={415+32*(1-drift)} angle={11} label="CONFIDENCIAL" subtitle="PARIS • 1925"/>
         <g transform={`translate(${-35+127*arrive} ${797-73*arrive}) rotate(${-18+9*arrive})`}><rect width="448" height="207" fill="#ab906b" stroke="#544335" strokeWidth="3"/>
         <path d="M0 2L224 126 448 2M0 207l160-117m288 117L288 90" stroke="#66523d" fill="none" strokeWidth="3"/>
         <circle cx="224" cy="126" r={24*Math.min(frame/13,1)} fill={rust}/></g>
@@ -179,12 +327,12 @@ function Art({type, detail}) {
       </>}
       {type==='payment' && <>
         <Portrait x={190} y={477} scale={1.44} kind="poisson"/>
-        <Document x={357} y={393} angle={10} label="CESSION" subtitle="TOUR EIFFEL"/>
+        <Document x={357} y={393} angle={10} label="CONTRATO" subtitle="TORRE EIFFEL"/>
         {[0,1,2,3].map(i=><g key={i} opacity={Math.min(Math.max((frame-i*4)/7,0),1)} transform={`translate(${295+21*i-156*(1-arrive)} ${750+17*i+80*(1-arrive)}) rotate(${-12+i*5})`}>
           <rect width="252" height="91" fill="#8a9270" stroke="#3a4a40" strokeWidth="3"/>
           <rect x="8" y="8" width="236" height="75" fill="none" stroke="#50604e"/>
           <ellipse cx="126" cy="45" rx="46" ry="26" fill="none" stroke="#50604e" strokeWidth="2"/>
-          <text x="126" y="52" textAnchor="middle" fontFamily={serif} fontSize="22" fill="#3a4a40">FRANCS</text>
+          <text x="126" y="52" textAnchor="middle" fontFamily={serif} fontSize="22" fill="#3a4a40">FRANCOS</text>
         </g>)}
       </>}
       {type==='escape' && <>
@@ -212,10 +360,9 @@ function Art({type, detail}) {
         </g>
       </>}
       {type==='return' && <>
-        <Document x={113} y={395} angle={-13} label="TOUR EIFFEL" subtitle="PARIS • 1925"/>
-        <Document x={452-122*arrive} y={510-86*arrive} angle={25-14*arrive} label="NOUVELLE OFFRE" subtitle="CONFIDENTIEL"/>
+        <Document x={113} y={395} angle={-13} label="TORRE EIFFEL" subtitle="PARIS • 1925"/>
+        <Document x={452-122*arrive} y={510-86*arrive} angle={25-14*arrive} label="NOVA OFERTA" subtitle="CONFIDENCIAL"/>
         <Portrait x={115} y={815} scale={1.35}/>
-        {detail && <g transform={`translate(368 646) rotate(-12) scale(${1.3-.3*arrive})`} opacity={arrive}><rect x="-164" y="-47" width="328" height="94" fill={paper} stroke={rust} strokeWidth="7"/><text y="14" textAnchor="middle" fill="#8e382d" fontSize="41" fontWeight="bold" fontFamily={sans}>FRACASSOU</text></g>}
       </>}
     </g>
   </svg>;
@@ -223,30 +370,31 @@ function Art({type, detail}) {
 
 const shots = [
   [0,'tower','PARIS, 1925','A venda impossível',360,580,1],
-  [2.45,'payment','PARIS, 1925','Um comprador',220,495,1.58],
-  [4.05,'diagram','PARIS, 1925','A Torre Eiffel',360,540,1.02],
-  [6.25,'diagram','O MONUMENTO','Nunca esteve à venda',365,560,1.12,'HORS DE VENTE'],
+  [2.45,'auction','PARIS, 1925','Um comprador',360,560,1.12],
+  [4.05,'river','PARIS, 1925','Às margens do Sena',360,600,1.1],
+  [6.25,'diagram','O MONUMENTO','Nunca esteve à venda',365,560,1.12,'FORA DE VENDA'],
   [9.02,'identity','O IMPOSTOR','Victor Lustig',335,450,1.28],
-  [11.6,'press','A OPORTUNIDADE','O custo da torre',235,520,1.36],
-  [14.0,'press','A OPORTUNIDADE','Manutenção cara',470,555,1.51],
-  [16.26,'identity','O PLANO','Lustig vê uma brecha',350,450,1.46],
-  [18.72,'identity','A FARSA','Um falso funcionário',530,770,1.46],
+  [11.6,'worker','A OPORTUNIDADE','O custo da torre',360,610,1.13],
+  [14.0,'ledger','A OPORTUNIDADE','Manutenção cara',350,560,1.1],
+  [16.26,'scheme','O PLANO','Lustig vê uma brecha',350,550,1.12],
+  [18.72,'credential','A FARSA','Um falso funcionário',350,560,1.12],
   [21.88,'letters','OS CONVITES','Cartas aos sucateiros',330,490,1.28],
-  [25.12,'letters','OS CONVITES','Reunião em segredo',330,800,1.45],
-  [28,'hotel','PARIS','A reunião no hotel',360,580,1.02],
-  [30.35,'hotel','A PROPOSTA','A torre seria desmontada',360,555,1.38],
-  [33.0,'diagram','A PROPOSTA','O ferro seria vendido',363,600,1.17,'FERRAILLE'],
+  [25.12,'mailbox','OS CONVITES','Reunião em segredo',355,610,1.15],
+  [28,'facade','PARIS','A reunião no hotel',360,580,1.1],
+  [29.55,'hotel','A PROPOSTA','Lustig faz o anúncio',360,555,1.16],
+  [31.25,'demolition','A PROPOSTA','A torre seria desmontada',360,600,1.1],
+  [33.0,'scrap','A PROPOSTA','O ferro seria vendido',363,600,1.12],
   [35.03,'payment','O COMPRADOR','André Poisson',185,490,1.55],
-  [37.42,'payment','O PAGAMENTO','Poisson paga',466,749,1.46],
-  [40.88,'diagram','A DESCOBERTA','Era uma fraude',363,565,1.06,'FRAUDE'],
+  [37.42,'cash','O PAGAMENTO','Poisson paga',365,650,1.14],
+  [40.88,'empty','A DESCOBERTA','Era uma fraude',358,605,1.13],
   [43.28,'escape','A FUGA','Destino: Áustria',370,580,1.14],
   [46.49,'silence','O SILÊNCIO','Poisson se cala',324,525,1.26],
-  [48.62,'silence','O SILÊNCIO','Ele não liga para a polícia',484,828,1.52],
-  [50.96,'silence','SEM DENÚNCIA','O golpe fica em segredo',328,548,1.46],
-  [53.64,'hotel','DE VOLTA A PARIS','Lustig volta à cidade',350,530,1.4],
+  [48.62,'phone','O SILÊNCIO','Ele não liga para a polícia',350,640,1.15],
+  [50.96,'desk','SEM DENÚNCIA','O golpe fica em segredo',350,630,1.12],
+  [53.64,'map','DE VOLTA A PARIS','Lustig volta à cidade',350,600,1.1],
   [56.48,'return','A REINCIDÊNCIA','Uma segunda oferta',441,555,1.16],
-  [58.38,'diagram','A REINCIDÊNCIA','A mesma torre',365,545,1.08],
-  [60.03,'return','A SEGUNDA TENTATIVA','O golpe fracassou',372,638,1.22,'FRACASSOU'],
+  [58.38,'silhouette','A REINCIDÊNCIA','A mesma torre',365,565,1.1],
+  [60.03,'reject','A SEGUNDA TENTATIVA','O golpe fracassou',372,638,1.16],
 ];
 
 function Shot({type,kicker,title,x,y,zoom,detail,duration,reverse}) {
