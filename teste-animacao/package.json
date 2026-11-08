@@ -1,0 +1,18 @@
+{
+  "name": "teste-animacao-vertical",
+  "private": true,
+  "scripts": {
+    "render": "remotion render src/index.jsx Encontro out/encontro.mp4 --codec=h264 --gl=swangle --concurrency=2 --overwrite",
+    "preview": "remotion studio src/index.jsx",
+    "verify": "node scripts/verify.cjs"
+  },
+  "dependencies": {
+    "@react-three/fiber": "8.18.0",
+    "@remotion/cli": "4.0.350",
+    "@remotion/three": "4.0.350",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.350",
+    "three": "0.175.0"
+  }
+}

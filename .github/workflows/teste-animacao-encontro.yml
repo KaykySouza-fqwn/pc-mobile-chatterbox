@@ -1,0 +1,42 @@
+name: Renderizar teste vertical
+
+on:
+  push:
+    branches: [teste-animacao-encontro]
+    paths:
+      - 'teste-animacao/**'
+      - '.github/workflows/teste-animacao-encontro.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: teste-animacao-vertical
+  cancel-in-progress: false
+
+jobs:
+  render:
+    if: ${{ github.event.repository.private == false }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: teste-animacao
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --no-audit --no-fund
+      - name: Disponibilizar ffprobe
+        run: |
+          if ! command -v ffprobe >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends ffmpeg
+          fi
+      - name: Renderizar com WebGL por software
+        run: time npm run render
+      - name: Conferir o MP4
+        run: npm run verify
