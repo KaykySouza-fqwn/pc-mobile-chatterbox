@@ -1,0 +1,50 @@
+name: Renderizar visuais de Eiffel 1925
+on:
+  push:
+    branches: [video-eiffel-1925]
+    paths:
+      - '.github/workflows/video-eiffel-1925.yml'
+      - 'video-eiffel/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: video-eiffel-1925
+  cancel-in-progress: false
+
+jobs:
+  render:
+    if: ${{ github.event.repository.private == false }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    defaults:
+      run:
+        working-directory: video-eiffel
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --no-audit --no-fund
+      - name: Renderizar visuais por software
+        run: time npm run render
+      - name: Conferir formato e tamanho
+        run: |
+          if ! command -v ffprobe >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends ffmpeg
+          fi
+          test "$(stat --format=%s out/eiffel-visuais.mp4)" -le 31457280
+          ffprobe -v error -count_frames -show_entries stream=codec_name,codec_type,width,height,r_frame_rate,nb_read_frames,duration -of json out/eiffel-visuais.mp4 > out/probe.json
+          cat out/probe.json
+          python3 -c 'import json; (v,) = json.load(open("out/probe.json"))["streams"]; assert (v["codec_name"],v["codec_type"],v["width"],v["height"],v["r_frame_rate"],v["nb_read_frames"]) == ("h264","video",720,1280,"24/1","1501")'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eiffel-1925-visuais
+          path: video-eiffel/out/eiffel-visuais.mp4
+          retention-days: 1
+          compression-level: 0
+          if-no-files-found: error

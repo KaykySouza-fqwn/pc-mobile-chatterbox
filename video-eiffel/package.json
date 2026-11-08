@@ -1,0 +1,16 @@
+{
+  "name": "teste-animacao-vertical",
+  "private": true,
+  "scripts": {
+    "render": "remotion render src/eiffel.jsx Eiffel1925 out/eiffel-visuais.mp4 --codec=h264 --crf=22 --gl=swangle --concurrency=3 --overwrite"
+  },
+  "dependencies": {
+    "@react-three/fiber": "8.18.0",
+    "@remotion/cli": "4.0.350",
+    "@remotion/three": "4.0.350",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.350",
+    "three": "0.175.0"
+  }
+}
