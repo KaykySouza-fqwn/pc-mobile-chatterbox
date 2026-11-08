@@ -17,7 +17,15 @@ jobs:
   render:
     if: ${{ github.event.repository.private == false }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 18
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {part: 1, frames: '0-374', count: 375}
+          - {part: 2, frames: '375-749', count: 375}
+          - {part: 3, frames: '750-1124', count: 375}
+          - {part: 4, frames: '1125-1500', count: 376}
     defaults:
       run:
         working-directory: video-eiffel
@@ -30,20 +38,20 @@ jobs:
           node-version: 22
       - run: npm ci --no-audit --no-fund
       - name: Renderizar visuais por software
-        run: time npm run render
+        run: time npm run render -- --muted --frames=${{ matrix.frames }}
       - name: Conferir formato e tamanho
         run: |
           if ! command -v ffprobe >/dev/null; then
             sudo apt-get update
             sudo apt-get install -y --no-install-recommends ffmpeg
           fi
-          test "$(stat --format=%s out/eiffel-visuais.mp4)" -le 31457280
+          test "$(stat --format=%s out/eiffel-visuais.mp4)" -le 8388608
           ffprobe -v error -count_frames -show_entries stream=codec_name,codec_type,width,height,r_frame_rate,nb_read_frames,duration -of json out/eiffel-visuais.mp4 > out/probe.json
           cat out/probe.json
-          python3 -c 'import json; (v,) = json.load(open("out/probe.json"))["streams"]; assert (v["codec_name"],v["codec_type"],v["width"],v["height"],v["r_frame_rate"],v["nb_read_frames"]) == ("h264","video",720,1280,"24/1","1501")'
+          python3 -c 'import json; (v,) = json.load(open("out/probe.json"))["streams"]; assert (v["codec_name"],v["codec_type"],v["width"],v["height"],v["r_frame_rate"],v["nb_read_frames"]) == ("h264","video",720,1280,"24/1","${{ matrix.count }}")'
       - uses: actions/upload-artifact@v4
         with:
-          name: eiffel-1925-visuais
+          name: eiffel-1925-parte-${{ matrix.part }}
           path: video-eiffel/out/eiffel-visuais.mp4
           retention-days: 1
           compression-level: 0
